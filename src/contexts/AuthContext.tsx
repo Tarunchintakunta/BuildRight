@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Check for stored user data on mount
     const storedUser = userStorage.get();
     if (storedUser) {
-      setUser(storedUser);
+      setUser(storedUser as User);
     }
     setIsLoading(false);
   }, []);
