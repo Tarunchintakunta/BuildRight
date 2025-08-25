@@ -84,7 +84,7 @@ const ProductsPage = () => {
     }
   };
 
-  const handleAddToWishlist = (product: any) => {
+  const handleAddToWishlist = (product: Product) => {
     toast.success(`${product.name} added to wishlist`);
   };
 
