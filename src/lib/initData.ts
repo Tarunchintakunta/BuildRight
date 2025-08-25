@@ -6,7 +6,9 @@ import {
   ordersStorage, 
   bookingsStorage,
   analyticsStorage,
-  notificationsStorage
+  notificationsStorage,
+  adminStorage,
+  providerStorage
 } from './storage';
 import { dummyProducts, dummyServiceProviders, dummyServiceCategories } from '@/data/dummy-data';
 

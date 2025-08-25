@@ -208,16 +208,17 @@ export const productsStorage = {
   },
   update: (productId: string, updates: Partial<unknown>) => {
     const products = productsStorage.get();
-    const index = products.findIndex((p: any) => p.id === productId);
+    const index = products.findIndex((p: unknown) => (p as Record<string, unknown>).id === productId);
     if (index !== -1) {
-      products[index] = { ...products[index], ...updates };
+      const product = products[index] as Record<string, unknown>;
+      products[index] = { ...product, ...updates };
       return storage.set(STORAGE_KEYS.PRODUCTS, products);
     }
     return false;
   },
   getById: (productId: string) => {
     const products = productsStorage.get();
-    return products.find((p: any) => p.id === productId) || null;
+    return products.find((p: unknown) => (p as Record<string, unknown>).id === productId) || null;
   },
   getByCategory: (categoryId: string) => {
     const products = productsStorage.get();
@@ -246,24 +247,31 @@ export const servicesStorage = {
   },
   update: (serviceId: string, updates: Partial<unknown>) => {
     const services = servicesStorage.get();
-    const index = services.findIndex((s: any) => s.id === serviceId);
+    const index = services.findIndex((s: unknown) => (s as Record<string, unknown>).id === serviceId);
     if (index !== -1) {
-      services[index] = { ...services[index], ...updates };
+      const service = services[index] as Record<string, unknown>;
+      services[index] = { ...service, ...updates };
       return storage.set(STORAGE_KEYS.SERVICES, services);
     }
     return false;
   },
   getById: (serviceId: string) => {
     const services = servicesStorage.get();
-    return services.find((s: any) => s.id === serviceId) || null;
+    return services.find((s: unknown) => (s as Record<string, unknown>).id === serviceId) || null;
   },
   getByCategory: (categoryId: string) => {
     const services = servicesStorage.get();
-    return services.filter((s: any) => s.category?.id === categoryId);
+    return services.filter((s: unknown) => {
+      const service = s as Record<string, unknown>;
+      return (service.category as Record<string, unknown>)?.id === categoryId;
+    });
   },
   getByProvider: (providerId: string) => {
     const services = servicesStorage.get();
-    return services.filter((s: any) => s.providerId === providerId);
+    return services.filter((s: unknown) => {
+      const service = s as Record<string, unknown>;
+      return service.providerId === providerId;
+    });
   }
 };
 
@@ -287,7 +295,7 @@ export const wishlistStorage = {
     const wishlist = wishlistStorage.get();
     return wishlist.includes(itemId);
   },
-  getByUser: (userId: string) => {
+  getByUser: (_userId: string) => {
     // In a real app, wishlist would be user-specific
     // For now, return global wishlist
     return wishlistStorage.get();
@@ -318,13 +326,14 @@ export const notificationsStorage = {
   },
   getByUser: (userId: string) => {
     const notifications = notificationsStorage.get();
-    return notifications.filter((n: any) => n.userId === userId);
+    return notifications.filter((n: unknown) => (n as Record<string, unknown>).userId === userId);
   },
   markAsRead: (notificationId: string) => {
     const notifications = notificationsStorage.get();
-    const index = notifications.findIndex((n: any) => n.id === notificationId);
+    const index = notifications.findIndex((n: unknown) => (n as Record<string, unknown>).id === notificationId);
     if (index !== -1) {
-      notifications[index] = { ...notifications[index], isRead: true };
+      const notification = notifications[index] as Record<string, unknown>;
+      notifications[index] = { ...notification, isRead: true };
       return storage.set(STORAGE_KEYS.NOTIFICATIONS, notifications);
     }
     return false;
@@ -353,17 +362,19 @@ export const analyticsStorage = {
   },
   getRevenueStats: () => {
     const orders = ordersStorage.get();
-    const totalRevenue = orders.reduce((total: number, order: any) => {
-      if (order.status === 'delivered' || order.status === 'completed') {
-        return total + (order.total || 0);
+    const totalRevenue = orders.reduce((total: number, order: unknown) => {
+      const orderData = order as Record<string, unknown>;
+      if (orderData.status === 'delivered' || orderData.status === 'completed') {
+        return total + ((orderData.total as number) || 0);
       }
       return total;
     }, 0);
     
-    const monthlyRevenue = orders.reduce((monthly: Record<string, number>, order: any) => {
-      if (order.status === 'delivered' || order.status === 'completed') {
-        const month = new Date(order.createdAt).toISOString().slice(0, 7); // YYYY-MM
-        monthly[month] = (monthly[month] || 0) + (order.total || 0);
+    const monthlyRevenue = orders.reduce((monthly: Record<string, number>, order: unknown) => {
+      const orderData = order as Record<string, unknown>;
+      if (orderData.status === 'delivered' || orderData.status === 'completed') {
+        const month = new Date(orderData.createdAt as string).toISOString().slice(0, 7); // YYYY-MM
+        monthly[month] = (monthly[month] || 0) + ((orderData.total as number) || 0);
       }
       return monthly;
     }, {});
@@ -392,16 +403,18 @@ export const adminStorage = {
       totalBookings: bookings.length,
       totalProducts: products.length,
       totalServices: services.length,
-      revenue: orders.reduce((total: number, order: any) => {
-        if (order.status === 'delivered' || order.status === 'completed') {
-          return total + (order.total || 0);
+      revenue: orders.reduce((total: number, order: unknown) => {
+        const orderData = order as Record<string, unknown>;
+        if (orderData.status === 'delivered' || orderData.status === 'completed') {
+          return total + ((orderData.total as number) || 0);
         }
         return total;
       }, 0),
-      pendingOrders: orders.filter((o: any) => o.status === 'pending').length,
-      activeBookings: bookings.filter((b: any) => 
-        ['pending', 'accepted', 'in_progress'].includes(b.status)
-      ).length
+      pendingOrders: orders.filter((o: unknown) => (o as Record<string, unknown>).status === 'pending').length,
+      activeBookings: bookings.filter((b: unknown) => {
+        const booking = b as Record<string, unknown>;
+        return ['pending', 'accepted', 'in_progress'].includes(booking.status as string);
+      }).length
     };
   }
 };
@@ -412,16 +425,22 @@ export const providerStorage = {
   getProviderServices: (providerId: string) => servicesStorage.getByProvider(providerId),
   getProviderStats: (providerId: string) => {
     const bookings = bookingsStorage.getByProvider(providerId);
-    const completedBookings = bookings.filter((b: any) => b.status === 'completed');
-    const totalEarnings = completedBookings.reduce((total: number, b: any) => total + (b.totalPrice || 0), 0);
+    const completedBookings = bookings.filter((b: unknown) => (b as Record<string, unknown>).status === 'completed');
+    const totalEarnings = completedBookings.reduce((total: number, b: unknown) => {
+      const booking = b as Record<string, unknown>;
+      return total + ((booking.totalPrice as number) || 0);
+    }, 0);
     
     return {
       totalBookings: bookings.length,
       completedBookings: completedBookings.length,
-      pendingBookings: bookings.filter((b: any) => b.status === 'pending').length,
+      pendingBookings: bookings.filter((b: unknown) => (b as Record<string, unknown>).status === 'pending').length,
       totalEarnings,
       averageRating: bookings.length > 0 ? 
-        bookings.reduce((sum: number, b: any) => sum + (b.rating || 0), 0) / bookings.length : 0
+        bookings.reduce((sum: number, b: unknown) => {
+          const booking = b as Record<string, unknown>;
+          return sum + ((booking.rating as number) || 0);
+        }, 0) / bookings.length : 0
     };
   }
 };

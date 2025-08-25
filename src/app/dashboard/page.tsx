@@ -59,7 +59,7 @@ const CustomerDashboard = () => {
     if (data) {
       setUserData(data);
       setOrders(data.orders as Order[]);
-      setNotifications(data.notifications as any[]);
+      setNotifications(data.notifications as Record<string, unknown>[]);
     }
   }, [user, router]);
 
@@ -486,7 +486,7 @@ const CustomerDashboard = () => {
                   {notifications && notifications.length > 0 ? (
                     <div className="space-y-4">
                       {notifications.map((notification: Record<string, unknown>) => (
-                        <div key={notification.id} className={`p-4 rounded-lg border-l-4 ${
+                        <div key={notification.id as string} className={`p-4 rounded-lg border-l-4 ${
                           notification.type === 'success' ? 'border-l-green-500 bg-green-50' :
                           notification.type === 'warning' ? 'border-l-yellow-500 bg-yellow-50' :
                           notification.type === 'error' ? 'border-l-red-500 bg-red-50' :
@@ -494,13 +494,13 @@ const CustomerDashboard = () => {
                         }`}>
                           <div className="flex items-start justify-between">
                             <div>
-                              <h4 className="font-medium text-gray-900">{notification.title}</h4>
-                              <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                              <h4 className="font-medium text-gray-900">{notification.title as string}</h4>
+                              <p className="text-sm text-gray-600 mt-1">{notification.message as string}</p>
                               <p className="text-xs text-gray-500 mt-2">
-                                {new Date(notification.createdAt).toLocaleDateString()}
+                                {new Date(notification.createdAt as string).toLocaleDateString()}
                               </p>
                             </div>
-                            {!notification.isRead && (
+                            {!(notification.isRead as boolean) && (
                               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                             )}
                           </div>
