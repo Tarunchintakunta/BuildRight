@@ -29,6 +29,7 @@ import { useCart } from '@/contexts/CartContext';
 import { dummyServiceCategories, dummyServiceProviders } from '@/data/dummy-data';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { ServiceProvider } from '@/types';
 
 const ServiceCategoryPage = () => {
   const params = useParams();
@@ -81,7 +82,7 @@ const ServiceCategoryPage = () => {
       type: 'service',
       itemId: selectedProvider.id,
       name: `${category.name} Service`,
-      image: selectedProvider.avatar,
+      image: selectedProvider.avatar || '',
       price: selectedProvider.pricing.hourly,
       quantity: 1,
       providerId: selectedProvider.id,

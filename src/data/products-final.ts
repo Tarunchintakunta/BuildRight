@@ -1,3 +1,5 @@
+import { Product } from '@/types';
+
 // Dummy Products with Unique Images for Each Category
 export const dummyProducts: Product[] = [
   {

@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
 import { dummyProducts, dummyProductCategories } from '@/data/dummy-data';
 import { toast } from 'sonner';
+import { Product } from '@/types';
 
 const ProductsPage = () => {
   const { addToCart, isInCart } = useCart();

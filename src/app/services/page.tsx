@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Navigation from '@/components/layout/Navigation';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -13,6 +13,7 @@ import { motion } from 'framer-motion';
 import { useCart } from '@/contexts/CartContext';
 import { dummyServiceCategories, dummyServiceProviders } from '@/data/dummy-data';
 import { toast } from 'sonner';
+import { ServiceProvider } from '@/types';
 
 const ServicesPage = () => {
   const { addToCart, isInCart } = useCart();

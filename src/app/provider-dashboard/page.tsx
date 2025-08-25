@@ -25,12 +25,13 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { dummyServiceProviders } from '@/data/dummy-data';
+import { ServiceBooking } from '@/types';
 
 const ProviderDashboard = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
-  const [bookings, setBookings] = useState<Array<{id: string; providerId: string; status: string}>>([]);
+  const [bookings, setBookings] = useState<ServiceBooking[]>([]);
 
   useEffect(() => {
     if (!user || user.role !== 'service_provider') {

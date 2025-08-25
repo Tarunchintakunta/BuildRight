@@ -23,6 +23,7 @@ interface OrderItem {
 
 interface Order {
   id: string;
+  customerId: string;
   items: OrderItem[];
   total: number;
   status: string;
