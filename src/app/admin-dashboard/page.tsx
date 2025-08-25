@@ -21,7 +21,8 @@ import {
   Eye,
   Edit,
   Trash2,
-  Plus
+  Plus,
+  CheckCircle
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { dummyUsers, dummyProducts, dummyServiceProviders } from '@/data/dummy-data';
@@ -29,7 +30,7 @@ import { dummyUsers, dummyProducts, dummyServiceProviders } from '@/data/dummy-d
 const AdminDashboard = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const [orders, setOrders] = useState<Array<{id: string; total: number; status: string}>>([]);
+  const [orders, setOrders] = useState<Array<{id: string; total: number; status: string; createdAt: string}>>([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
 

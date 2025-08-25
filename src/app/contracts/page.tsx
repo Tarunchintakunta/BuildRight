@@ -15,15 +15,12 @@ import {
   FileText, 
   Plus, 
   Search, 
-  Filter, 
   MapPin, 
   Calendar, 
   DollarSign, 
   Users,
-  Clock,
   Eye,
-  MessageSquare,
-  TrendingUp
+  MessageSquare
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { dummyContracts, dummyServiceCategories } from '@/data/dummy-data';
@@ -78,13 +75,16 @@ const ContractsPage = () => {
         max: parseFloat(newContract.budgetMax)
       },
       location: {
+        id: `addr-${Date.now()}`,
+        type: 'other' as const,
         address: newContract.location,
         city: 'New York', // In a real app, this would be parsed from the location
         state: 'NY',
-        zipCode: '10001'
+        zipCode: '10001',
+        isDefault: false
       },
       deadline: new Date(newContract.deadline),
-      status: 'open',
+      status: 'open' as const,
       bids: [],
       createdAt: new Date()
     };
