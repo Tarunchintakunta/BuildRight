@@ -76,7 +76,7 @@ const ProductsPage = () => {
     setBulkQuantity(1);
   };
 
-  const handleBulkOrderSubmit = (product: any) => {
+  const handleBulkOrderSubmit = (product: Product) => {
     if (bulkQuantity > 0) {
       handleAddToCart(product, bulkQuantity);
       setBulkOrderProduct(null);
