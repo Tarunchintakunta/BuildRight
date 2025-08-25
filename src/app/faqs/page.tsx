@@ -205,7 +205,7 @@ const FAQsPage = () => {
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Find answers to common questions about our platform, services, and products. 
-              Can't find what you're looking for? Contact our support team.
+              Can&apos;t find what you&apos;re looking for? Contact our support team.
             </p>
           </div>
 
@@ -329,11 +329,11 @@ const FAQsPage = () => {
               <CardContent className="p-8">
                 <div className="text-center">
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    Can't Find Your Answer?
+                    Can&apos;t Find Your Answer?
                   </h3>
                   <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-                    We're constantly updating our FAQ section based on customer questions. 
-                    If you have a specific question that isn't covered here, please reach out to us.
+                    We&apos;re constantly updating our FAQ section based on customer questions. 
+                    If you have a specific question that isn&apos;t covered here, please reach out to us.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="/contact" className="inline-block">
