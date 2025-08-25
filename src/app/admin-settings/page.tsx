@@ -12,7 +12,6 @@ import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { 
   Settings, 
   Users, 
@@ -152,7 +151,7 @@ const AdminSettingsPage = () => {
       
       setHasUnsavedChanges(false);
       toast.success('Settings saved successfully!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to save settings');
     } finally {
       setIsLoading(false);
