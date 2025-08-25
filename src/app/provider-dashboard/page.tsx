@@ -33,7 +33,7 @@ const ProviderDashboard = () => {
   const { user } = useAuth();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('overview');
-  const [bookings, setBookings] = useState<any[]>([]);
+  const [bookings, setBookings] = useState<Array<{id: string; providerId: string; status: string}>>([]);
 
   useEffect(() => {
     if (!user || user.role !== 'service_provider') {
@@ -43,7 +43,7 @@ const ProviderDashboard = () => {
 
     // Load bookings from localStorage (in a real app, this would be API calls)
     const storedBookings = JSON.parse(localStorage.getItem('construction_bookings') || '[]');
-    const userBookings = storedBookings.filter((booking: any) => booking.providerId === user.id);
+    const userBookings = storedBookings.filter((booking: {providerId: string}) => booking.providerId === user.id);
     setBookings(userBookings);
   }, [user, router]);
 
