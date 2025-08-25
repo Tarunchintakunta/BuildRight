@@ -168,7 +168,7 @@ const ContactPage = () => {
               Get in Touch
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Have questions, feedback, or need assistance? We're here to help! 
+              Have questions, feedback, or need assistance? We&apos;re here to help! 
               Reach out to us through any of the channels below or fill out the contact form.
             </p>
           </div>
