@@ -32,7 +32,7 @@ import Link from 'next/link';
 
 const ServiceCategoryPage = () => {
   const params = useParams();
-  const { user } = useAuth();
+
   const { addToCart } = useCart();
   const [selectedProvider, setSelectedProvider] = useState<ServiceProvider | null>(null);
   const [bookingData, setBookingData] = useState({

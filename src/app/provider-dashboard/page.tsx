@@ -17,12 +17,9 @@ import {
   Clock, 
   MapPin, 
   CheckCircle, 
-  AlertTriangle,
   TrendingUp,
   Settings,
   Eye,
-  Phone,
-  MessageSquare,
   Edit,
   Plus
 } from 'lucide-react';
