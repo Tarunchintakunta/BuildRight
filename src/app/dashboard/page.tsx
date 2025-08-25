@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Package, Wrench, MapPin, Clock, Star, TrendingUp, ShoppingBag, Calendar, User, Settings } from 'lucide-react';
+import { Package, Wrench, MapPin, Clock, Star, TrendingUp, ShoppingBag, Calendar, User, Settings, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { getUserData } from '@/lib/initData';
 
 interface OrderItem {
   id: string;
@@ -44,6 +45,8 @@ const CustomerDashboard = () => {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
+  const [userData, setUserData] = useState<any>(null);
+  const [notifications, setNotifications] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user || user.role !== 'customer') {
@@ -51,10 +54,13 @@ const CustomerDashboard = () => {
       return;
     }
 
-    // Load orders from localStorage
-    const storedOrders = JSON.parse(localStorage.getItem('construction_orders') || '[]');
-    const userOrders = storedOrders.filter((order: Order) => order.customerId === user.id);
-    setOrders(userOrders);
+    // Load user data using the new storage utilities
+    const data = getUserData(user.id);
+    if (data) {
+      setUserData(data);
+      setOrders(data.orders as Order[]);
+      setNotifications(data.notifications as any[]);
+    }
   }, [user, router]);
 
   const getStatusColor = (status: string) => {
@@ -216,10 +222,11 @@ const CustomerDashboard = () => {
 
           {/* Main Content Tabs */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="orders">Orders</TabsTrigger>
               <TabsTrigger value="services">Services</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
               <TabsTrigger value="account">Account</TabsTrigger>
             </TabsList>
 
@@ -428,16 +435,85 @@ const CustomerDashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8">
-                    <Wrench className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No service bookings yet</h3>
-                    <p className="text-gray-600 mb-6">
-                      Book professional services for your construction projects
-                    </p>
-                    <Link href="/services">
-                      <Button>Browse Services</Button>
-                    </Link>
-                  </div>
+                  {userData?.bookings && userData.bookings.length > 0 ? (
+                    <div className="space-y-4">
+                      {userData.bookings.map((booking: any) => (
+                        <div key={booking.id} className="border rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-semibold text-gray-900">{booking.service}</h4>
+                            <Badge className={getStatusColor(booking.status)}>
+                              {booking.status}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            Scheduled for {new Date(booking.scheduledDate).toLocaleDateString()}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Total: ${booking.totalPrice}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Wrench className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No service bookings yet</h3>
+                      <p className="text-gray-600 mb-6">
+                        Book professional services for your construction projects
+                      </p>
+                      <Link href="/services">
+                        <Button>Browse Services</Button>
+                      </Link>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Notifications Tab */}
+            <TabsContent value="notifications" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Bell className="w-5 h-5" />
+                    <span>Notifications</span>
+                  </CardTitle>
+                  <CardDescription>
+                    Stay updated with your orders and services
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {notifications && notifications.length > 0 ? (
+                    <div className="space-y-4">
+                      {notifications.map((notification: any) => (
+                        <div key={notification.id} className={`p-4 rounded-lg border-l-4 ${
+                          notification.type === 'success' ? 'border-l-green-500 bg-green-50' :
+                          notification.type === 'warning' ? 'border-l-yellow-500 bg-yellow-50' :
+                          notification.type === 'error' ? 'border-l-red-500 bg-red-50' :
+                          'border-l-blue-500 bg-blue-50'
+                        }`}>
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="font-medium text-gray-900">{notification.title}</h4>
+                              <p className="text-sm text-gray-600 mt-1">{notification.message}</p>
+                              <p className="text-xs text-gray-500 mt-2">
+                                {new Date(notification.createdAt).toLocaleDateString()}
+                              </p>
+                            </div>
+                            {!notification.isRead && (
+                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Bell className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">No notifications</h3>
+                      <p className="text-gray-600">You're all caught up!</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
