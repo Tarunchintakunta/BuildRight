@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Navigation from '@/components/layout/Navigation';
@@ -38,7 +38,7 @@ interface Order {
   trackingNumber: string;
 }
 
-const OrderSuccessPage = () => {
+const OrderSuccessContent = () => {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('orderId');
   const [order, setOrder] = useState<Order | null>(null);
@@ -356,6 +356,24 @@ const OrderSuccessPage = () => {
         </motion.div>
       </div>
     </div>
+  );
+};
+
+const OrderSuccessPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Loading...</h1>
+            <p className="text-gray-600">Please wait while we load your order details.</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <OrderSuccessContent />
+    </Suspense>
   );
 };
 
