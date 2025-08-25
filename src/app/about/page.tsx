@@ -127,7 +127,7 @@ const AboutPage = () => {
               About BuildRight
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              We're revolutionizing the construction industry by connecting customers with verified professionals 
+              We&apos;re revolutionizing the construction industry by connecting customers with verified professionals 
               and providing quality materials through a seamless digital platform.
             </p>
           </div>
@@ -317,7 +317,7 @@ const AboutPage = () => {
             >
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Journey</h2>
               <p className="text-xl text-gray-600">
-                Key milestones in our company's growth
+                Key milestones in our company&apos;s growth
               </p>
             </motion.div>
 
