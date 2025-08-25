@@ -1,8 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { CartItem, Product, ServiceProvider } from '@/types';
-import { dummyProducts, dummyServiceProviders } from '@/data/dummy-data';
+import { CartItem } from '@/types';
+import { cartStorage } from '@/lib/storage';
 
 interface CartContextType {
   items: CartItem[];
@@ -33,22 +33,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    // Load cart from localStorage on mount
-    const storedCart = localStorage.getItem('construction_cart');
-    if (storedCart) {
-      try {
-        const cartData = JSON.parse(storedCart);
-        setItems(cartData);
-      } catch (error) {
-        console.error('Error parsing stored cart data:', error);
-        localStorage.removeItem('construction_cart');
-      }
-    }
+    // Load cart from storage utility on mount
+    const storedCart = cartStorage.get();
+    setItems(storedCart);
   }, []);
 
   useEffect(() => {
-    // Save cart to localStorage whenever it changes
-    localStorage.setItem('construction_cart', JSON.stringify(items));
+    // Save cart to storage utility whenever it changes
+    cartStorage.set(items);
   }, [items]);
 
   const addToCart = (item: Omit<CartItem, 'id'>) => {

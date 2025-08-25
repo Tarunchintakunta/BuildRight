@@ -1,8 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Customer, ServiceProvider, Admin } from '@/types';
-import { dummyUsers, dummyCustomer, dummyServiceProviders, dummyAdmin } from '@/data/dummy-data';
+import { User } from '@/types';
+import { userStorage } from '@/lib/storage';
+import { dummyCustomer, dummyServiceProviders, dummyAdmin } from '@/data/dummy-data';
 
 interface AuthContextType {
   user: User | null;
@@ -31,15 +32,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Check for stored user data on mount
-    const storedUser = localStorage.getItem('construction_user');
+    const storedUser = userStorage.get();
     if (storedUser) {
-      try {
-        const userData = JSON.parse(storedUser);
-        setUser(userData);
-      } catch (error) {
-        console.error('Error parsing stored user data:', error);
-        localStorage.removeItem('construction_user');
-      }
+      setUser(storedUser);
     }
     setIsLoading(false);
   }, []);
@@ -77,7 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       if (foundUser) {
         setUser(foundUser);
-        localStorage.setItem('construction_user', JSON.stringify(foundUser));
+        userStorage.set(foundUser);
         return true;
       } else {
         return false;
@@ -92,7 +87,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('construction_user');
+    userStorage.clear();
   };
 
   const value: AuthContextType = {
