@@ -304,7 +304,7 @@ const ServicesPage = () => {
               <CardContent className="p-8">
                 <h2 className="text-2xl font-bold mb-4">Need a Custom Service?</h2>
                 <p className="text-blue-100 mb-6">
-                  Can't find what you're looking for? Post a contract and get bids from multiple providers.
+                  Can&apos;t find what you&apos;re looking for? Post a contract and get bids from multiple providers.
                 </p>
                 <Link href="/contracts">
                   <Button size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
