@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Package, Wrench, MapPin, Clock, Star, TrendingUp, ShoppingBag, Calendar, User, Settings, Bell } from 'lucide-react';
+import { Package, Wrench, Clock, Star, TrendingUp, ShoppingBag, Calendar, User, Settings, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { getUserData } from '@/lib/initData';
@@ -45,8 +45,8 @@ const CustomerDashboard = () => {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
-  const [userData, setUserData] = useState<any>(null);
-  const [notifications, setNotifications] = useState<any[]>([]);
+  const [userData, setUserData] = useState<Record<string, unknown> | null>(null);
+  const [notifications, setNotifications] = useState<Record<string, unknown>[]>([]);
 
   useEffect(() => {
     if (!user || user.role !== 'customer') {
@@ -435,21 +435,21 @@ const CustomerDashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {userData?.bookings && userData.bookings.length > 0 ? (
+                  {userData?.bookings && Array.isArray(userData.bookings) && userData.bookings.length > 0 ? (
                     <div className="space-y-4">
-                      {userData.bookings.map((booking: any) => (
-                        <div key={booking.id} className="border rounded-lg p-4">
+                      {(userData.bookings as Record<string, unknown>[]).map((booking: Record<string, unknown>) => (
+                        <div key={booking.id as string} className="border rounded-lg p-4">
                           <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-semibold text-gray-900">{booking.service}</h4>
-                            <Badge className={getStatusColor(booking.status)}>
-                              {booking.status}
+                            <h4 className="font-semibold text-gray-900">{booking.service as string}</h4>
+                            <Badge className={getStatusColor(booking.status as string)}>
+                              {booking.status as string}
                             </Badge>
                           </div>
                           <p className="text-sm text-gray-600 mb-2">
-                            Scheduled for {new Date(booking.scheduledDate).toLocaleDateString()}
+                            Scheduled for {new Date(booking.scheduledDate as string).toLocaleDateString()}
                           </p>
                           <p className="text-sm text-gray-600">
-                            Total: ${booking.totalPrice}
+                            Total: ${booking.totalPrice as number}
                           </p>
                         </div>
                       ))}
@@ -485,7 +485,7 @@ const CustomerDashboard = () => {
                 <CardContent>
                   {notifications && notifications.length > 0 ? (
                     <div className="space-y-4">
-                      {notifications.map((notification: any) => (
+                      {notifications.map((notification: Record<string, unknown>) => (
                         <div key={notification.id} className={`p-4 rounded-lg border-l-4 ${
                           notification.type === 'success' ? 'border-l-green-500 bg-green-50' :
                           notification.type === 'warning' ? 'border-l-yellow-500 bg-yellow-50' :
@@ -511,7 +511,7 @@ const CustomerDashboard = () => {
                     <div className="text-center py-8">
                       <Bell className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                       <h3 className="text-lg font-medium text-gray-900 mb-2">No notifications</h3>
-                      <p className="text-gray-600">You're all caught up!</p>
+                      <p className="text-gray-600">You&apos;re all caught up!</p>
                     </div>
                   )}
                 </CardContent>

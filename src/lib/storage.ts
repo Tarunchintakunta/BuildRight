@@ -69,7 +69,7 @@ export const cartStorage = {
   clear: () => storage.remove(STORAGE_KEYS.CART),
   getByUser: (userId: string) => {
     const cart = cartStorage.get();
-    return cart.filter((item: any) => item.userId === userId);
+    return cart.filter((item: unknown) => (item as Record<string, unknown>).userId === userId);
   }
 };
 
@@ -86,16 +86,16 @@ export const userStorage = {
   },
   update: (userId: string, updates: Partial<unknown>) => {
     const users = userStorage.getAll();
-    const index = users.findIndex((u: any) => u.id === userId);
+    const index = users.findIndex((u: unknown) => (u as Record<string, unknown>).id === userId);
     if (index !== -1) {
-      users[index] = { ...users[index], ...updates };
+      users[index] = { ...(users[index] as Record<string, unknown>), ...updates };
       return storage.set(STORAGE_KEYS.USERS, users);
     }
     return false;
   },
   getById: (userId: string) => {
     const users = userStorage.getAll();
-    return users.find((u: any) => u.id === userId) || null;
+    return users.find((u: unknown) => (u as Record<string, unknown>).id === userId) || null;
   }
 };
 
@@ -109,36 +109,42 @@ export const ordersStorage = {
   },
   update: (orderId: string, updates: Partial<unknown>) => {
     const orders = ordersStorage.get();
-    const index = orders.findIndex((o: any) => o.id === orderId);
+    const index = orders.findIndex((o: unknown) => (o as Record<string, unknown>).id === orderId);
     if (index !== -1) {
-      orders[index] = { ...orders[index], ...updates };
+      const order = orders[index] as Record<string, unknown>;
+      orders[index] = { ...order, ...updates };
       return storage.set(STORAGE_KEYS.ORDERS, orders);
     }
     return false;
   },
   getById: (orderId: string) => {
     const orders = ordersStorage.get();
-    return orders.find((o: any) => o.id === orderId) || null;
+    return orders.find((o: unknown) => (o as Record<string, unknown>).id === orderId) || null;
   },
   getByUser: (userId: string) => {
     const orders = ordersStorage.get();
-    return orders.filter((o: any) => o.customerId === userId);
+    return orders.filter((o: unknown) => (o as Record<string, unknown>).customerId === userId);
   },
   getByStatus: (status: string) => {
     const orders = ordersStorage.get();
-    return orders.filter((o: any) => o.status === status);
+    return orders.filter((o: unknown) => (o as Record<string, unknown>).status === status);
   },
   getRecent: (limit: number = 10) => {
     const orders = ordersStorage.get();
     return orders
-      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a: unknown, b: unknown) => {
+        const aDate = new Date((a as Record<string, unknown>).createdAt as string).getTime();
+        const bDate = new Date((b as Record<string, unknown>).createdAt as string).getTime();
+        return bDate - aDate;
+      })
       .slice(0, limit);
   },
   getTotalRevenue: () => {
     const orders = ordersStorage.get();
-    return orders.reduce((total: number, order: any) => {
-      if (order.status === 'delivered' || order.status === 'completed') {
-        return total + (order.total || 0);
+    return orders.reduce((total: number, order: unknown) => {
+      const orderData = order as Record<string, unknown>;
+      if (orderData.status === 'delivered' || orderData.status === 'completed') {
+        return total + ((orderData.total as number) || 0);
       }
       return total;
     }, 0);
@@ -155,33 +161,38 @@ export const bookingsStorage = {
   },
   update: (bookingId: string, updates: Partial<unknown>) => {
     const bookings = bookingsStorage.get();
-    const index = bookings.findIndex((b: any) => b.id === bookingId);
+    const index = bookings.findIndex((b: unknown) => (b as Record<string, unknown>).id === bookingId);
     if (index !== -1) {
-      bookings[index] = { ...bookings[index], ...updates };
+      const booking = bookings[index] as Record<string, unknown>;
+      bookings[index] = { ...booking, ...updates };
       return storage.set(STORAGE_KEYS.BOOKINGS, bookings);
     }
     return false;
   },
   getById: (bookingId: string) => {
     const bookings = bookingsStorage.get();
-    return bookings.find((b: any) => b.id === bookingId) || null;
+    return bookings.find((b: unknown) => (b as Record<string, unknown>).id === bookingId) || null;
   },
   getByProvider: (providerId: string) => {
     const bookings = bookingsStorage.get();
-    return bookings.filter((b: any) => b.providerId === providerId);
+    return bookings.filter((b: unknown) => (b as Record<string, unknown>).providerId === providerId);
   },
   getByCustomer: (customerId: string) => {
     const bookings = bookingsStorage.get();
-    return bookings.filter((b: any) => b.customerId === customerId);
+    return bookings.filter((b: unknown) => (b as Record<string, unknown>).customerId === customerId);
   },
   getByStatus: (status: string) => {
     const bookings = bookingsStorage.get();
-    return bookings.filter((b: any) => b.status === status);
+    return bookings.filter((b: unknown) => (b as Record<string, unknown>).status === status);
   },
   getRecent: (limit: number = 10) => {
     const bookings = bookingsStorage.get();
     return bookings
-      .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a: unknown, b: unknown) => {
+        const aDate = new Date((a as Record<string, unknown>).createdAt as string).getTime();
+        const bDate = new Date((b as Record<string, unknown>).createdAt as string).getTime();
+        return bDate - aDate;
+      })
       .slice(0, limit);
   }
 };
@@ -210,11 +221,17 @@ export const productsStorage = {
   },
   getByCategory: (categoryId: string) => {
     const products = productsStorage.get();
-    return products.filter((p: any) => p.category?.id === categoryId);
+    return products.filter((p: unknown) => {
+      const product = p as Record<string, unknown>;
+      return (product.category as Record<string, unknown>)?.id === categoryId;
+    });
   },
   getLowStock: (threshold: number = 10) => {
     const products = productsStorage.get();
-    return products.filter((p: any) => (p.stock || 0) <= threshold);
+    return products.filter((p: unknown) => {
+      const product = p as Record<string, unknown>;
+      return ((product.stock as number) || 0) <= threshold;
+    });
   }
 };
 

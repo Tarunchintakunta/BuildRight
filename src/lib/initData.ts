@@ -262,16 +262,21 @@ export const getUserData = (userId: string) => {
     notifications: userNotifications,
     stats: {
       totalOrders: userOrders.length,
-      totalSpent: userOrders.reduce((total: number, order: any) => {
-        if (order.status === 'delivered' || order.status === 'completed') {
-          return total + (order.total || 0);
+      totalSpent: userOrders.reduce((total: number, order: unknown) => {
+        const orderData = order as Record<string, unknown>;
+        if (orderData.status === 'delivered' || orderData.status === 'completed') {
+          return total + ((orderData.total as number) || 0);
         }
         return total;
       }, 0),
-      activeBookings: userBookings.filter((b: any) => 
-        ['pending', 'accepted', 'in_progress'].includes(b.status)
-      ).length,
-      unreadNotifications: userNotifications.filter((n: any) => !n.isRead).length
+      activeBookings: userBookings.filter((b: unknown) => {
+        const booking = b as Record<string, unknown>;
+        return ['pending', 'accepted', 'in_progress'].includes(booking.status as string);
+      }).length,
+      unreadNotifications: userNotifications.filter((n: unknown) => {
+        const notification = n as Record<string, unknown>;
+        return !(notification.isRead as boolean);
+      }).length
     }
   };
 };
@@ -301,7 +306,11 @@ export const getProviderData = (providerId: string) => {
   const providerBookings = providerStorage.getProviderBookings(providerId);
   const providerServices = providerStorage.getProviderServices(providerId);
   const recentBookings = providerBookings
-    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .sort((a: unknown, b: unknown) => {
+      const aDate = new Date((a as Record<string, unknown>).createdAt as string).getTime();
+      const bDate = new Date((b as Record<string, unknown>).createdAt as string).getTime();
+      return bDate - aDate;
+    })
     .slice(0, 5);
 
   return {
