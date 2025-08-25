@@ -43,7 +43,7 @@ const ServicesPage = () => {
     }
   });
 
-  const handleAddToCart = (provider: any) => {
+  const handleAddToCart = (provider: ServiceProvider) => {
     addToCart({
       type: 'service',
       itemId: provider.id,
