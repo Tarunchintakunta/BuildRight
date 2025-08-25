@@ -58,7 +58,7 @@ const ProductsPage = () => {
     return filtered;
   }, [searchTerm, selectedCategory, sortBy]);
 
-  const handleAddToCart = (product: any, quantity: number = 1) => {
+  const handleAddToCart = (product: Product, quantity: number = 1) => {
     addToCart({
       type: 'product',
       itemId: product.id,
@@ -71,7 +71,7 @@ const ProductsPage = () => {
     toast.success(`${quantity}x ${product.name} added to cart`);
   };
 
-  const handleBulkOrder = (product: any) => {
+  const handleBulkOrder = (product: Product) => {
     setBulkOrderProduct(product.id);
     setBulkQuantity(1);
   };
