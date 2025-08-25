@@ -59,67 +59,67 @@ export const storage = {
 
 // Cart storage functions
 export const cartStorage = {
-  get: () => storage.get(STORAGE_KEYS.CART, []),
-  set: (cart: any[]) => storage.set(STORAGE_KEYS.CART, cart),
+  get: () => storage.get<unknown[]>(STORAGE_KEYS.CART, []),
+  set: (cart: unknown[]) => storage.set(STORAGE_KEYS.CART, cart),
   clear: () => storage.remove(STORAGE_KEYS.CART)
 };
 
 // User storage functions
 export const userStorage = {
-  get: () => storage.get(STORAGE_KEYS.USER, null),
-  set: (user: any) => storage.set(STORAGE_KEYS.USER, user),
+  get: () => storage.get<unknown | null>(STORAGE_KEYS.USER, null),
+  set: (user: unknown) => storage.set(STORAGE_KEYS.USER, user),
   clear: () => storage.remove(STORAGE_KEYS.USER)
 };
 
 // Orders storage functions
 export const ordersStorage = {
-  get: () => storage.get(STORAGE_KEYS.ORDERS, []),
-  add: (order: any) => {
+  get: () => storage.get<unknown[]>(STORAGE_KEYS.ORDERS, []),
+  add: (order: unknown) => {
     const orders = ordersStorage.get();
     orders.push(order);
     return storage.set(STORAGE_KEYS.ORDERS, orders);
   },
-  update: (orderId: string, updates: Partial<any>) => {
+  update: (orderId: string, updates: Partial<unknown>) => {
     const orders = ordersStorage.get();
-    const index = orders.findIndex((o: any) => o.id === orderId);
+    const index = orders.findIndex((o: unknown) => (o as { id: string }).id === orderId);
     if (index !== -1) {
-      orders[index] = { ...orders[index], ...updates };
+      (orders[index] as Record<string, unknown>) = { ...(orders[index] as Record<string, unknown>), ...updates };
       return storage.set(STORAGE_KEYS.ORDERS, orders);
     }
     return false;
   },
   getById: (orderId: string) => {
     const orders = ordersStorage.get();
-    return orders.find((o: any) => o.id === orderId) || null;
+    return orders.find((o: unknown) => (o as { id: string }).id === orderId) || null;
   }
 };
 
 // Bookings storage functions
 export const bookingsStorage = {
-  get: () => storage.get(STORAGE_KEYS.BOOKINGS, []),
-  add: (booking: any) => {
+  get: () => storage.get<unknown[]>(STORAGE_KEYS.BOOKINGS, []),
+  add: (booking: unknown) => {
     const bookings = bookingsStorage.get();
     bookings.push(booking);
     return storage.set(STORAGE_KEYS.BOOKINGS, bookings);
   },
-  update: (bookingId: string, updates: Partial<any>) => {
+  update: (bookingId: string, updates: Partial<unknown>) => {
     const bookings = bookingsStorage.get();
-    const index = bookings.findIndex((b: any) => b.id === bookingId);
+    const index = bookings.findIndex((b: unknown) => (b as { id: string }).id === bookingId);
     if (index !== -1) {
-      bookings[index] = { ...bookings[index], ...updates };
+      (bookings[index] as Record<string, unknown>) = { ...(bookings[index] as Record<string, unknown>), ...updates };
       return storage.set(STORAGE_KEYS.BOOKINGS, bookings);
     }
     return false;
   },
   getByProvider: (providerId: string) => {
     const bookings = bookingsStorage.get();
-    return bookings.filter((b: any) => b.providerId === providerId);
+    return bookings.filter((b: unknown) => (b as { providerId: string }).providerId === providerId);
   }
 };
 
 // Wishlist storage functions
 export const wishlistStorage = {
-  get: () => storage.get(STORAGE_KEYS.WISHLIST, []),
+  get: () => storage.get<string[]>(STORAGE_KEYS.WISHLIST, []),
   add: (itemId: string) => {
     const wishlist = wishlistStorage.get();
     if (!wishlist.includes(itemId)) {
@@ -141,12 +141,12 @@ export const wishlistStorage = {
 
 // Settings storage functions
 export const settingsStorage = {
-  get: () => storage.get(STORAGE_KEYS.SETTINGS, {
+  get: () => storage.get<Record<string, unknown>>(STORAGE_KEYS.SETTINGS, {
     theme: 'light',
     notifications: true,
     language: 'en'
   }),
-  update: (settings: Partial<any>) => {
+  update: (settings: Partial<Record<string, unknown>>) => {
     const current = settingsStorage.get();
     const updated = { ...current, ...settings };
     return storage.set(STORAGE_KEYS.SETTINGS, updated);
