@@ -35,7 +35,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   useEffect(() => {
     // Load cart from storage utility on mount
     const storedCart = cartStorage.get();
-    setItems(storedCart);
+    setItems(storedCart as CartItem[]);
   }, []);
 
   useEffect(() => {
