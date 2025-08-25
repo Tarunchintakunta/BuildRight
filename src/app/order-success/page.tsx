@@ -91,7 +91,7 @@ const OrderSuccessPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Order Not Found</h1>
-            <p className="text-gray-600 mb-8">The order you're looking for could not be found.</p>
+            <p className="text-gray-600 mb-8">The order you&apos;re looking for could not be found.</p>
             <Link href="/">
               <Button>Return to Home</Button>
             </Link>
@@ -123,7 +123,7 @@ const OrderSuccessPage = () => {
             </motion.div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">Order Confirmed!</h1>
             <p className="text-xl text-gray-600 mb-2">
-              Thank you for your order. We've received your payment and are processing your request.
+              Thank you for your order. We&apos;ve received your payment and are processing your request.
             </p>
             <p className="text-gray-500">Order #{order.id}</p>
           </div>
@@ -236,7 +236,7 @@ const OrderSuccessPage = () => {
                 <CardHeader>
                   <CardTitle>What Happens Next?</CardTitle>
                   <CardDescription>
-                    Here's what you can expect in the coming days
+                    Here&apos;s what you can expect in the coming days
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -247,7 +247,7 @@ const OrderSuccessPage = () => {
                       </div>
                       <div>
                         <h4 className="font-medium text-gray-900">Order Processing</h4>
-                        <p className="text-sm text-gray-600">We're reviewing your order and preparing it for fulfillment.</p>
+                        <p className="text-sm text-gray-600">We&apos;re reviewing your order and preparing it for fulfillment.</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -256,7 +256,7 @@ const OrderSuccessPage = () => {
                       </div>
                       <div>
                         <h4 className="font-medium text-gray-900">Service Coordination</h4>
-                        <p className="text-sm text-gray-600">For services, we'll connect you with the provider to schedule work.</p>
+                        <p className="text-sm text-gray-600">For services, we&apos;ll connect you with the provider to schedule work.</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
@@ -305,7 +305,7 @@ const OrderSuccessPage = () => {
                 <CardHeader>
                   <CardTitle>Need Help?</CardTitle>
                   <CardDescription>
-                    We're here to help with any questions
+                    We&apos;re here to help with any questions
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
