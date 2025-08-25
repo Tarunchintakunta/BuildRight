@@ -18,8 +18,6 @@ import {
   Users, 
   Globe, 
   Phone, 
-  Mail, 
-  Calendar,
   CheckCircle,
   Building2,
   Wrench,
