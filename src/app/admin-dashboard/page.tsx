@@ -32,7 +32,7 @@ import { dummyUsers, dummyProducts, dummyServiceProviders } from '@/data/dummy-d
 const AdminDashboard = () => {
   const { user } = useAuth();
   const router = useRouter();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Array<{id: string; total: number; status: string}>>([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
 
